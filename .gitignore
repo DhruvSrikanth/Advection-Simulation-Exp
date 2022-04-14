@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Movie
+*.mp4
+
+# Pycache
+./src/__pycache__/

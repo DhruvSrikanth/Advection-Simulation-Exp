@@ -1,7 +1,7 @@
 import os
-from matplotlib import animation
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
 def read_file(filename):
     '''
@@ -39,7 +39,41 @@ def plot_data():
         plt.pause(.0001) # Delay in seconds
         fig.canvas.draw() # Draws the image to the screen
 
-plot_data()
+# plot_data()
+
+def generate_video():
+    movie_name = "./static/movie.avi"
+
+    c = 0
+    imgs = []
+    step = 100
+    NT = len(os.listdir('./outputs/'))*step
+    for i in range(0, NT, step):
+        c += 1
+        print("Plotting Simulation Sample : " + str(c))
+        filename = "./outputs/output_" + str(i)
+        data = read_file(filename + ".txt")
+        plt.imshow(data)
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.colorbar(orientation='vertical')
+        plt.title('Advection Simulation Plot')
+        plt.savefig(filename + '.png')
+        plt.close()
+        imgs.append(filename + '.png')
+    
+  
+    frame = cv2.imread(imgs[0])
+    height, width, _ = frame.shape  
+    video = cv2.VideoWriter(movie_name, 0, 1, (width, height)) 
+    for img in imgs: 
+        video.write(cv2.imread(img)) 
+      
+    cv2.destroyAllWindows() 
+    video.release()
+
+generate_video()
+
 # Visualize and save data for different timestamps in the simulation
 # plot_data("./milestone-1/initial_gaussian.txt")
 
